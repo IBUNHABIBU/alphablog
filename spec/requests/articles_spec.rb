@@ -2,8 +2,34 @@ require 'rails_helper'
 
 RSpec.describe "Articles", type: :request do
   before do 
-    @article = Article.create(title:"first article",body:"content for the first article")
+    @john = User.create(email:"john@gmail.com",password:"123456")
+    @gile = User.create(email:"gile@gmail.com",password:"123456")
+    @article = Article.create!(title:"first article",body:"content for the first article",user: @john)
   end
+  
+  describe 'GET/articles/:id/edit' do 
+    context "with non signed user" do 
+      before { get "/articles/#{@article.id}/edit" }
+      it " redirect to the sign in page " do
+        expect(response.status).to eq 302
+        flash_message = "You need to sign in or sign up before continuing." 
+        expect(flash[:alert]).to eq flash_message
+      end
+    end
+    
+    context "with signed user who is non-owner" do 
+       before do 
+         login_as(@gile)
+         get "/articles/#{@article.id}/edit" 
+       end
+      it "redirect to home page" do
+        expect(response.status).to eq 302
+        flash_message = "You can only edit your own article." 
+        expect(flash[:alert]).to eq flash_message
+      end
+    end
+  end
+  
   describe 'GET/articles/:id' do 
     context "with existing article" do 
       before { get "/articles/#{@article.id}" }
