@@ -1,6 +1,8 @@
 <h1>Articles#index</h1>
 <p>Find me in app/views/articles/index.html.erb</p>
-<%= link_to "New Article", new_article_path, class:"btn btn-default btn-lg",id:"new-article-btn"%>
+<% if user_signed_in? %>
+    <%= link_to "New Article", new_article_path, class:"btn btn-default btn-lg",id:"new-article-btn"%>
+<% end %>
 <% if @article.empty? %>
   <h1 id="no-articles">No articles created</h1>
 <% else %>
