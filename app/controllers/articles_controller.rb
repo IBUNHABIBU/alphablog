@@ -22,7 +22,9 @@ before_action :set_article, only: [:show, :edit, :update, :destroy]
     render :new
     end
   end
-  def show 
+   def show
+    @comment = @article.comments.build
+    @comments = @article.comments
   end
   def edit
     unless @article.user == current_user
