@@ -7,17 +7,18 @@ RSpec.describe "Articles", type: :request do
     @article = Article.create!(title:"first article",body:"content for the first article",user: @john)
   end
   
-  describe 'GET/articles/:id/edit' do 
-    context "with non signed user" do 
+  describe 'GET /articles/:id/edit' do
+    context 'with non-signed in user' do
       before { get "/articles/#{@article.id}/edit" }
-      it " redirect to the sign in page " do
+      
+      it "redirects to the signin page" do
         expect(response.status).to eq 302
-        flash_message = "You need to sign in or sign up before continuing." 
+        flash_message = "You need to sign in or sign up before continuing."
         expect(flash[:alert]).to eq flash_message
       end
     end
     
-    context "with signed user who is non-owner" do 
+  context "with signed user who is non-owner" do 
        before do 
          login_as(@gile)
          get "/articles/#{@article.id}/edit" 

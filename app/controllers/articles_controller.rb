@@ -24,20 +24,25 @@ before_action :set_article, only: [:show, :edit, :update, :destroy]
   end
   def show 
   end
-  def edit 
+  def edit
     unless @article.user == current_user
-        message = "You can only edit your own article."
-    flash[:alert] = message
-    redirect_to root_path
+      flash[:alert] = "You can only edit your own article."
+      redirect_to root_path 
     end
   end
-  def update 
-    if @article.update(article_params) 
-      flash[:success]= "Article has been updated"
-      redirect_to @article 
+
+  def update
+    unless @article.user == current_user
+      flash[:danger] = "You can only edit your own article."
+      redirect_to root_path 
     else
-      flash.now[:danger]="Article has not been updated"
-      render :edit
+      if @article.update(article_params) 
+        flash[:success] = "Article has been updated" 
+        redirect_to @article
+      else
+        flash.now[:danger] = "Article has not been updated" 
+        render :edit
+      end 
     end
   end
   def destroy 
